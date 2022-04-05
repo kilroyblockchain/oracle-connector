@@ -92,4 +92,29 @@ export class OBCAccessService {
       }
     }
   }
+
+  async patchOBC(apiUrl: string, body: any) {
+    const logger = new Logger('PatchOBC');
+    try {
+      const response = await axios.patch(OBC_ADMIN_HOST + apiUrl, body, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      logger.error(error);
+      if (error.status) {
+        logger.error(error);
+        throw error;
+      }
+      const err = error as AxiosError;
+      logger.error(JSON.stringify(err.response.data));
+      if (err.response && err.response.status == HttpStatus.CONFLICT) {
+        throw new ConflictException([err.response.data.detail]);
+      } else {
+        throw new InternalServerErrorException(['Something Went Wrong']);
+      }
+    }
+  }
 }

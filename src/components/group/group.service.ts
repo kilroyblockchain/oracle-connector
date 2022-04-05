@@ -1,23 +1,20 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
-import { CreateOBCUserDto } from '../obc/dto/create-obc-user.dto';
-import { GrantAppRoleDto } from '../obc/dto/grant-app-role.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { OBCService } from '../obc/obc.service';
-import { RegisterUserDto } from './dto/register-user.dto';
-import axios, { AxiosError } from 'axios';
 
 @Injectable()
 export class GroupService {
   constructor(private readonly obcService: OBCService) {}
 
   async getGroupList() {
-    const logger = new Logger('GetGroupList');
-
     return await this.obcService.getAllGroup();
+  }
+
+  async addUserToGroup(userName: string, groupId: string) {
+    const userDetails = await this.obcService.searchUserByUserName(userName);
+    if (userDetails.totalResults == 0) {
+      throw new NotFoundException('User Not Found');
+    }
+    const userId = userDetails.Resources[0].id;
+    return await this.obcService.addUserToGroup(groupId, userId);
   }
 }

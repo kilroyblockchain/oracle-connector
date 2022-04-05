@@ -35,7 +35,7 @@ export class OBCService {
   }
 
   async getAllGroup() {
-    const API_URL = OBC_API.GET_OBC_GROUP_LIST + '?attributes=displayName';
+    const API_URL = OBC_API.OBC_GROUP + '?attributes=displayName';
     return await this.obcAccessService.getOBC(API_URL);
   }
 
@@ -51,6 +51,29 @@ export class OBCService {
     return await this.obcAccessService.postOBC(
       OBC_API.SEARCH_OBC_USER,
       searchUserRequest,
+    );
+  }
+
+  async addUserToGroup(groupId: string, userId: string) {
+    const request = {
+      schemas: ['urn:ietf:params:scim:api:messages:2.0:PatchOp'],
+      Operations: [
+        {
+          op: 'add',
+          path: 'members',
+          value: [
+            {
+              value: userId,
+              type: 'User',
+            },
+          ],
+        },
+      ],
+    };
+
+    return await this.obcAccessService.patchOBC(
+      OBC_API.OBC_GROUP + '/' + groupId,
+      request,
     );
   }
 }
