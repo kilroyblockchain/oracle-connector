@@ -8,7 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthorizationGuard } from 'src/@core/auth/guards/authorization.guard';
-import { BlockchainStatusGuard } from 'src/@core/auth/guards/blockchain-status.guard';
 import { Response } from 'src/@core/common/dto/response.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserService } from './user.service';
@@ -18,7 +17,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  // @UseGuards(AuthorizationGuard)
+  @UseGuards(AuthorizationGuard)
   async createUser(@Body() registerUserDto: RegisterUserDto) {
     return new Response(
       'User Registered Successfully',

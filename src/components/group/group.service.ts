@@ -6,7 +6,11 @@ export class GroupService {
   constructor(private readonly obcService: OBCService) {}
 
   async getGroupList() {
-    return await this.obcService.getAllGroup();
+    const groupList = await this.obcService.getAllGroup();
+    if (groupList.totalResults == 0) {
+      return [];
+    }
+    return groupList.Resources;
   }
 
   async addUserToGroup(userName: string, groupId: string) {

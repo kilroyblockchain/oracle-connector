@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthorizationGuard } from 'src/@core/auth/guards/authorization.guard';
 import { Response } from 'src/@core/common/dto/response.dto';
 import { UserToGroupDto } from './dto/user-to-group.dto';
 import { GroupService } from './group.service';
@@ -8,7 +16,7 @@ export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
   @Get('/all')
-  // @UseGuards(AuthorizationGuard)
+  @UseGuards(AuthorizationGuard)
   async getGroupList() {
     return new Response(
       'Group List Fetched Successfully',
@@ -17,7 +25,7 @@ export class GroupController {
   }
 
   @Post('/add-user')
-  // @UseGuards(AuthorizationGuard)
+  @UseGuards(AuthorizationGuard)
   async addUserToGroup(@Body() userToGroupDto: UserToGroupDto) {
     const addUserToGroupRes = await this.groupService.addUserToGroup(
       userToGroupDto.userName,
