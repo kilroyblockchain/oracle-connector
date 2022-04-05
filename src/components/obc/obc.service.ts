@@ -34,82 +34,8 @@ export class OBCService {
     );
   }
 
-  async activateUser(userName: string) {
-    const activateUserRequest = {
-      mappingAttribute: 'userName',
-      mappingAttributeValue: userName,
-      includeMemberships: true,
-      schemas: ['urn:ietf:params:scim:schemas:oracle:idcs:Asserter'],
-    };
-    return await this.obcAccessService.postOBC(
-      OBC_API.USER_ACTIVATION,
-      activateUserRequest,
-    );
-  }
-
-  async deactivateUser(userName: string) {
-    const deactivateUserRequest = {
-      active: false,
-      schemas: ['urn:ietf:params:scim:schemas:oracle:idcs:UserStatusChanger'],
-    };
-    return await this.obcAccessService.putOBC(
-      OBC_API.USER_DEACTIVATE + '/' + userName,
-      deactivateUserRequest,
-    );
-  }
-
-  async getBCAppInfo() {
-    const getAppInfoRequest = {
-      schemas: ['urn:ietf:params:scim:api:messages:2.0:SearchRequest'],
-      attributes: ['displayName', 'active'],
-      filter: 'displayName co "' + OBC_BLOCKCHAIN_NAME + '"',
-      sortBy: 'displayName',
-      startIndex: 1,
-      count: 10,
-    };
-    return await this.obcAccessService.postOBC(
-      OBC_API.GET_APP_INFO,
-      getAppInfoRequest,
-    );
-  }
-
-  async getBCAppRoleByAppId(appId: string) {
-    return await this.obcAccessService.getOBC(
-      OBC_API.GET_APP_ROLE + '"' + appId + '"',
-    );
-  }
-
-  async grantAppRoleToUser(grantAppRoleDto: GrantAppRoleDto) {
-    const grantAppRoleRequest = {
-      grantee: {
-        type: 'User',
-        value: grantAppRoleDto.userId,
-      },
-      app: {
-        value: grantAppRoleDto.appId,
-      },
-      entitlement: {
-        attributeName: 'appRoles',
-        attributeValue: grantAppRoleDto.appRoleId,
-      },
-      grantMechanism: 'ADMINISTRATOR_TO_USER',
-      schemas: ['urn:ietf:params:scim:schemas:oracle:idcs:Grant'],
-    };
-    return await this.obcAccessService.postOBC(
-      OBC_API.GRANT_APP_ROLE,
-      grantAppRoleRequest,
-    );
-  }
-
-  async changeUserPassword(userId: string, password: string) {
-    const resetUserRequest = {
-      password: password,
-      schemas: ['urn:ietf:params:scim:schemas:oracle:idcs:UserPasswordChanger'],
-    };
-
-    return await this.obcAccessService.putOBC(
-      OBC_API.CHANGE_PASSWORD + '/' + userId,
-      resetUserRequest,
-    );
+  async getAllGroup() {
+    const API_URL = OBC_API.GET_OBC_GROUP_LIST + '?attributes=displayName';
+    return await this.obcAccessService.getOBC(API_URL);
   }
 }

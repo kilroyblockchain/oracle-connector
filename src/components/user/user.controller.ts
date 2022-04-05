@@ -26,24 +26,6 @@ export class UserController {
     ).setStatusCode(HttpStatus.OK);
   }
 
-  @Get('activate/:userId')
-  @UseGuards(BlockchainStatusGuard, AuthorizationGuard)
-  async activateUser(@Param('userId') userId: string) {
-    return new Response(
-      'User Activated Successfully',
-      await this.userService.activateUser(userId),
-    ).setStatusCode(HttpStatus.OK);
-  }
-
-  @Get('deactivate/:userId')
-  @UseGuards(BlockchainStatusGuard, AuthorizationGuard)
-  async deactivateUser(@Param('userId') userId: string) {
-    return new Response(
-      'User Deactivated Successfully',
-      await this.userService.deactivateUser(userId),
-    ).setStatusCode(HttpStatus.OK);
-  }
-
   @Get('check/:userId')
   @UseGuards(AuthorizationGuard)
   async checkUserStatus(@Param('userId') userId: string) {

@@ -5,10 +5,12 @@ import { AccessTokenDto } from './components/obc/access-token/dto/access-token.d
 import { OBCModule } from './components/obc/obc.module';
 import { UserModule } from './components/user/user.module';
 import * as redisStore from 'cache-manager-redis-store';
+import { GroupModule } from './components/group/group.module';
 @Module({
   imports: [
     OBCModule,
     UserModule,
+    GroupModule,
     CacheModule.register({
       store: redisStore,
       host: process.env.REDIS_HOST,
