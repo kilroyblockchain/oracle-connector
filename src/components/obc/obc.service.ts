@@ -38,4 +38,19 @@ export class OBCService {
     const API_URL = OBC_API.GET_OBC_GROUP_LIST + '?attributes=displayName';
     return await this.obcAccessService.getOBC(API_URL);
   }
+
+  async searchUserByUserName(userName: string) {
+    const searchUserRequest = {
+      schemas: ['urn:ietf:params:scim:api:messages:2.0:SearchRequest'],
+      attributes: ['displayName', 'userName'],
+      filter: 'userName sw "' + userName + '"',
+      startIndex: 1,
+      count: 1,
+    };
+
+    return await this.obcAccessService.postOBC(
+      OBC_API.SEARCH_OBC_USER,
+      searchUserRequest,
+    );
+  }
 }
