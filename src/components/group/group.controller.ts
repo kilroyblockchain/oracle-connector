@@ -31,7 +31,6 @@ export class GroupController {
       userToGroupDto.userName,
       userToGroupDto.groupId,
     );
-    console.log(addUserToGroupRes);
     return new Response('User Added To Group Successfully', {
       groupName: addUserToGroupRes.displayName,
     }).setStatusCode(HttpStatus.OK);
