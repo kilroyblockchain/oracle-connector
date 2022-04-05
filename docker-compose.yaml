@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  obc-connector:
+    container_name: obc-connector
+    build: .
+    image: obc-connector
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 5818:5818
+    command: npm run start:prod
+    env_file:
+      - .env
+    networks:
+      - webnet
+    depends_on:
+      - redis
+  redis:
+    container_name: obc-redis-cache
+    image: redis
+    ports:
+      - 5004:6379
+    networks:
+      - webnet
+networks:
+  webnet:
