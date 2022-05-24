@@ -40,9 +40,9 @@ export class AppModule implements OnModuleInit {
           'Bearer ' + accessTokenResponse.access_token;
       } else if (!req.headers.Authorization && req.headers.userName) {
         const accessTokenDto = new AccessTokenDto();
-        accessTokenDto.userName = req.headers.userName;
-        accessTokenDto.password = req.headers.password;
-        accessTokenDto.scope = req.headers.scope;
+        accessTokenDto.userName = req.headers.userName.toString();
+        accessTokenDto.password = req.headers.password.toString();
+        accessTokenDto.scope = req.headers.scope.toString();
         accessTokenDto.grantType = 'password';
         const accessTokenResponse =
           await this.accessTokenService.generateAccessToken(accessTokenDto);
