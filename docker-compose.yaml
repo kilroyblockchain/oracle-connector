@@ -1,20 +1,40 @@
-version: '3.7'
+version: '3.8'
 
 services:
-  obc-connector:
-    container_name: obc-connector
-    build: .
-    image: obc-connector
+  dev:
+    container_name: obc_connector_dev
+    image: obc-connector-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    ports:
+      - 5818:3000
+    networks:
+      - obc-network
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    ports:
-      - 5818:5818
+    restart: unless-stopped
+    depends_on:
+      - redis
+  prod:
+    container_name: obc_connector_prod
+    image: obc-connector-prod:1.0.0
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
     command: npm run start:prod
-    env_file:
-      - .env
+    ports:
+      - 5818:3000
     networks:
-      - webnet
+      - obc-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
     depends_on:
       - redis
   redis:
@@ -23,6 +43,7 @@ services:
     ports:
       - 5004:6379
     networks:
-      - webnet
+      - obc-network
+
 networks:
-  webnet:
+  obc-network:
