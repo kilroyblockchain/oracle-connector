@@ -8,9 +8,9 @@ services:
       context: .
       target: development
       dockerfile: ./Dockerfile
-    command: npm run start:debug
+    command: npm run start
     ports:
-      - 5818:3000
+      - ${PORT}:${APP_PORT}
     networks:
       - obc-network
     volumes:
@@ -19,6 +19,7 @@ services:
     restart: unless-stopped
     depends_on:
       - redis
+
   prod:
     container_name: obc_connector_prod
     image: obc-connector-prod:1.0.0
@@ -28,20 +29,21 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:prod
     ports:
-      - 5818:3000
+      - ${PORT}:${APP_PORT}
     networks:
       - obc-network
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     restart: unless-stopped
+    links:
+      - redis
     depends_on:
       - redis
+
   redis:
     container_name: obc-redis-cache
     image: redis
-    ports:
-      - 5004:6379
     networks:
       - obc-network
 
