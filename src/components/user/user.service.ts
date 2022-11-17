@@ -55,12 +55,4 @@ export class UserService {
     createOBCUserDto.userName = registerUserDto.email;
     await this.obcService.createOBCUser(createOBCUserDto);
   }
-
-  async activateUser(userId: string) {
-    return await this.obcService.activateUser(userId);
-  }
-
-  async deactivateUser(userId: string) {
-    return await this.obcService.deactivateUser(userId);
-  }
 }

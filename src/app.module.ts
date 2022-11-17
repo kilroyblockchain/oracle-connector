@@ -5,10 +5,12 @@ import { AccessTokenDto } from './components/obc/access-token/dto/access-token.d
 import { OBCModule } from './components/obc/obc.module';
 import { UserModule } from './components/user/user.module';
 import * as redisStore from 'cache-manager-redis-store';
+import { GroupModule } from './components/group/group.module';
 @Module({
   imports: [
     OBCModule,
     UserModule,
+    GroupModule,
     CacheModule.register({
       store: redisStore,
       host: process.env.REDIS_HOST,
@@ -38,9 +40,9 @@ export class AppModule implements OnModuleInit {
           'Bearer ' + accessTokenResponse.access_token;
       } else if (!req.headers.Authorization && req.headers.userName) {
         const accessTokenDto = new AccessTokenDto();
-        accessTokenDto.userName = req.headers.userName;
-        accessTokenDto.password = req.headers.password;
-        accessTokenDto.scope = req.headers.scope;
+        accessTokenDto.userName = req.headers.userName.toString();
+        accessTokenDto.password = req.headers.password.toString();
+        accessTokenDto.scope = req.headers.scope.toString();
         accessTokenDto.grantType = 'password';
         const accessTokenResponse =
           await this.accessTokenService.generateAccessToken(accessTokenDto);
