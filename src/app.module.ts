@@ -14,7 +14,7 @@ import { GroupModule } from './components/group/group.module';
     CacheModule.register({
       store: redisStore,
       host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT,
+      port: +process.env.REDIS_PORT,
       max: 10000,
     }),
   ],
