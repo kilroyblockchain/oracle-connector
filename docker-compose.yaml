@@ -36,8 +36,6 @@ services:
       - /usr/src/app/node_modules
     env_file: .env
     restart: unless-stopped
-    links:
-      - redis
     depends_on:
       - redis
 
