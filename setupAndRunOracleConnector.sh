@@ -9,24 +9,17 @@ Color_Off='\033[0m'
 # Export oracle connector repo name
 export ORACLE_CONNECTOR_REPO=oracle-connector
 
-# Function for remove docker danling images
-removeDanlingImages(){
-echo -e "${YELLOW}Starting removing docker danling images${Color_Off}"
-REMOVE_DANGLING_IMAGES="docker rmi $(docker images -q -f dangling=true)"
-eval $REMOVE_DANGLING_IMAGES
-echo -e "${YELLOW}Successfully removed docker danling images${Color_Off}"
-}
-
 #  Check the if the setup or created .env file or not or is empty or not
 if [[ ! -f ".env" ||  ! -s ".env" ]];
 then 
 echo -e "${RED}"
-echo "---------------------------------------------------"
-echo -e "---------------------------------------------------${Color_Off}"
-echo -e "${BLOD_RED}Please set up .env file on the root folder Oracle connector."
-echo -e "For sample for .env file you can see the .env-sample file at the root folder of the Oracle connector.${Color_Off}"
-echo -e "${RED}---------------------------------------------------"
-echo "---------------------------------------------------"
+echo -e "------------------------------------------------------------------------------------------------------"
+echo -e "------------------------------------------------------------------------------------------------------"
+echo -e ".env file not found"
+echo -e "Please set up .env file on the root folder of oracle-connector."
+echo -e "For sample .env file you can see the .env-sample file at the root folder of the oracle-connector."
+echo -e "------------------------------------------------------------------------------------------------------"
+echo -e "------------------------------------------------------------------------------------------------------"
 echo -e "${Color_Off}"
 echo -e ""
 exit 0 
@@ -34,25 +27,16 @@ fi
 
 # Run oracle connector docker container
 echo -e "${GREEN}"
-echo "---------------------------------------------------"
-echo -e "---------------------------------------------------${Color_Off}"
-echo -e "${BLOD_GREEN}Starting Docker Container For Oracle Connector${Color_Off}"
+echo "-------------------------------------------------------------"
+echo "-------------------------------------------------------------"
+echo -e "Starting docker container for oracle-connector"
+echo "-------------------------------------------------------------"
+echo -e "-------------------------------------------------------------${Color_Off}"
 docker compose up -d prod
-echo -e "${GREEN}"
-echo "---------------------------------------------------"
-echo -e "---------------------------------------------------${Color_Off}"
-echo -e "${BLOD_GREEN}Successfully Started Oracle Connector On Docker Container ${Color_Off}"
 
-# Remove development stage image or unused image of the docker
-removeDanlingImages
-
-# After docker container is up the show the success messages
-source .env
 echo -e "${GREEN}"
-echo "---------------------------------------------------"
-echo -e "---------------------------------------------------${Color_Off}"
-echo -e "${BLOD_GREEN}Oracle connector is up and running on port $PORT${Color_Off}"
-echo -e "${GREEN}---------------------------------------------------"
-echo "---------------------------------------------------"
-echo -e "${Color_Off}"
-echo -e ""
+echo "-------------------------------------------------------------"
+echo -e "-------------------------------------------------------------"
+echo -e "Successfully started oracle-connector on docker container"
+echo -e "-------------------------------------------------------------"
+echo -e "-------------------------------------------------------------${Color_Off}"
