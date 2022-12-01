@@ -1,4 +1,4 @@
-import { CacheModule, Module, OnModuleInit } from '@nestjs/common';
+import { CacheModule, Logger, Module, OnModuleInit } from '@nestjs/common';
 import axios from 'axios';
 import { AccessTokenService } from './components/obc/access-token/access-token.service';
 import { AccessTokenDto } from './components/obc/access-token/dto/access-token.dto';
@@ -27,8 +27,9 @@ export class AppModule implements OnModuleInit {
     const OBC_ADMIN_USERNAME = process.env.OBC_ADMIN_USERNAME;
     const OBC_ADMIN_PASSWORD = process.env.OBC_ADMIN_PASSWORD;
     const OBC_ADMIN_SCOPE = process.env.OBC_ADMIN_SCOPE;
+    this.checkConnectionToOC(OBC_ADMIN_USERNAME,OBC_ADMIN_PASSWORD,OBC_ADMIN_SCOPE)
     axios.interceptors.request.use(async (req) => {
-      if (!req.headers.Authorization && !req.headers.userName) {
+    if (!req.headers.Authorization && !req.headers.userName) {
         const accessTokenDto = new AccessTokenDto();
         accessTokenDto.userName = OBC_ADMIN_USERNAME;
         accessTokenDto.password = OBC_ADMIN_PASSWORD;
@@ -51,5 +52,23 @@ export class AppModule implements OnModuleInit {
       }
       return req;
     });
+  }
+
+  private async checkConnectionToOC(ocAdminUserName:string,ocAdminPassword:string,ocAdminScope:string){
+    const logger = new Logger("CheckConnectionToOC")
+    const accessTokenDto = new AccessTokenDto();
+    accessTokenDto.userName = ocAdminUserName;
+    accessTokenDto.password = ocAdminPassword;
+    accessTokenDto.scope = ocAdminScope;
+    accessTokenDto.grantType = 'password';
+      try{
+        await this.accessTokenService.generateAccessToken(accessTokenDto);
+      }catch(error){
+        if (error.response &&  error.response.statusCode){
+        logger.error(error.response.message[0])
+      }else{
+        logger.error(error)
+      }
+      }
   }
 }
