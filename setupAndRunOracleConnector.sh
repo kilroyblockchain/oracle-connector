@@ -5,6 +5,9 @@ GREEN='\033[0;32m'
 BLOD_GREEN='\033[1;32m'
 YELLOW="\033[0;33m"
 Color_Off='\033[0m'
+BLUE='\033[0;34m'
+
+. ./.env
 
 # Export oracle connector repo name
 export ORACLE_CONNECTOR_REPO=oracle-connector
@@ -25,18 +28,40 @@ echo -e ""
 exit 0 
 fi
 
-# Run oracle connector docker container
-echo -e "${GREEN}"
-echo "-------------------------------------------------------------"
-echo "-------------------------------------------------------------"
-echo -e "Starting docker container for oracle-connector"
-echo "-------------------------------------------------------------"
-echo -e "-------------------------------------------------------------${Color_Off}"
+# _______________________________________ Starting docker container _______________________________________
 docker compose up -d prod
+res=$?
+{ set +x; } 2>/dev/null
+if [ $res -ne 0 ]; then
+    echo -e "${RED}"
+    echo "-------------------------------------------------------------"
+    echo "-------------------------------------------------------------"
+    echo "Failed to start oracle connector"
+    echo "-------------------------------------------------------------"
+    echo -e "-------------------------------------------------------------${Color_Off}"
+    exit 1
+fi
 
+# _______________________________________ Checking Connection and Config Error _______________________________________
+echo
+echo -e "${BLUE}Starting oracle connector. Please wait...${Color_Off}"
+sleep 10
+configError=$(docker logs obc_connector_prod 2>&1 | grep "ERROR" | awk '{ s = ""; for (i = 10; i <= NF; i++) s = s $i " "; print s }')
+connectionError=$(echo >/dev/tcp/localhost/$PORT &>/dev/null && echo "false" || echo "true")
+if [[ -n $configError ]] || [ "$connectionError" == "true" ]; then
+    echo -e "${RED}"
+    echo "-------------------------------------------------------------"
+    echo "-------------------------------------------------------------"
+    echo -e "Failed to start oracle connector. See the log using the following command: ${BLUE}docker logs obc_connector_prod"
+    echo -e "${RED}-------------------------------------------------------------"
+    echo -e "-------------------------------------------------------------${Color_Off}"
+    exit 1
+  fi
+
+# _______________________________________ Success Connection to Oracle Cloud _______________________________________
 echo -e "${GREEN}"
 echo "-------------------------------------------------------------"
-echo -e "-------------------------------------------------------------"
-echo -e "Successfully started oracle-connector on docker container"
-echo -e "-------------------------------------------------------------"
+echo "-------------------------------------------------------------"
+echo -e "Successfully started oracle-connector"
+echo "-------------------------------------------------------------"
 echo -e "-------------------------------------------------------------${Color_Off}"
