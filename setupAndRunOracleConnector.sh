@@ -30,6 +30,12 @@ fi
 
 # _______________________________________ Starting docker container _______________________________________
 docker compose up -d prod
+echo -e "${YELLOW}Starting removing docker danling images${Color_Off}"
+
+REMOVE_DANGLING_IMAGES="docker rmi $(docker images -q -f dangling=true)"
+eval $REMOVE_DANGLING_IMAGES
+echo -e "${YELLOW}Successfully removed docker danling images${Color_Off}"
+
 res=$?
 { set +x; } 2>/dev/null
 if [ $res -ne 0 ]; then
@@ -46,13 +52,13 @@ fi
 echo
 echo -e "${BLUE}Starting oracle connector. Please wait...${Color_Off}"
 sleep 10
-configError=$(docker logs obc_connector_prod 2>&1 | grep "ERROR" | awk '{ s = ""; for (i = 10; i <= NF; i++) s = s $i " "; print s }')
+configError=$(docker logs oc_connector 2>&1 | grep "ERROR" | awk '{ s = ""; for (i = 10; i <= NF; i++) s = s $i " "; print s }')
 connectionError=$(echo >/dev/tcp/localhost/$PORT &>/dev/null && echo "false" || echo "true")
 if [[ -n $configError ]] || [ "$connectionError" == "true" ]; then
     echo -e "${RED}"
     echo "-------------------------------------------------------------"
     echo "-------------------------------------------------------------"
-    echo -e "Failed to start oracle connector. See the log using the following command: ${BLUE}docker logs obc_connector_prod"
+    echo -e "Failed to start oracle connector. See the log using the following command: ${BLUE}docker logs oc_connector"
     echo -e "${RED}-------------------------------------------------------------"
     echo -e "-------------------------------------------------------------${Color_Off}"
     exit 1
