@@ -12,7 +12,7 @@ services:
     ports:
       - ${PORT}:${APP_PORT}
     networks:
-      - obc-network
+      - bta-network
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -21,8 +21,8 @@ services:
       - redis
 
   prod:
-    container_name: obc_connector_prod
-    image: obc-connector-prod:1.0.0
+    container_name: oc_connector
+    image: oc-connector:1.0.0
     build:
       context: .
       target: production
@@ -31,7 +31,7 @@ services:
     ports:
       - ${PORT}:${APP_PORT}
     networks:
-      - obc-network
+      - bta-network
     volumes:
       - /usr/src/app/node_modules
     env_file: .env
@@ -40,10 +40,10 @@ services:
       - redis
 
   redis:
-    container_name: obc-redis-cache
+    container_name: oc-redis-cache
     image: redis
     networks:
-      - obc-network
+      - bta-network
 
 networks:
-  obc-network:
+  bta-network:

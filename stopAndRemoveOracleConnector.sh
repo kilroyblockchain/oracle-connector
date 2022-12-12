@@ -17,7 +17,7 @@ echo -e "Stopping and removing oracle-connector docker container."
 echo -e "-------------------------------------------------------------------"
 echo -e "-------------------------------------------------------------------${Color_Off}"
 docker compose down -v
-docker image rm -f redis:latest obc-connector-prod:1.0.0 
+docker image rm -f redis:latest oc-connector:1.0.0
 rm .env
 echo -e "${GREEN}"
 echo -e "-------------------------------------------------------------------"
